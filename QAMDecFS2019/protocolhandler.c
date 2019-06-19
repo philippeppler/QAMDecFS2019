@@ -15,7 +15,7 @@
 #include "semphr.h"
 
 /* Constants */
-#define ANZ_SEND_QUEUE					32
+#define ANZ_SEND_QUEUE					64
 #define	PROTOCOL_BUFFER_SIZE			32
 #define SLDP_PAYLOAD_MAX_SIZE			256
 /* xQuelle */
@@ -50,14 +50,14 @@ xQueueHandle xALDPQueue;									// Queue from Protocolhandler to Main-Task
 SemaphoreHandle_t xGlobalProtocolBuffer_A_Key;			//A-Resource for ucGlobalProtocolBuffer_A
 SemaphoreHandle_t xGlobalProtocolBuffer_B_Key;			//A-Resource for ucGlobalProtocolBuffer_B
 
-/* global Variables */
+/* global Variables 
 uint8_t ucGlobalProtocolBuffer_A[ PROTOCOL_BUFFER_SIZE ] = {};	// Buffer_A from Demodulator to ProtocolTask
 uint8_t ucGlobalProtocolBuffer_B[ PROTOCOL_BUFFER_SIZE ] = {};	// Buffer_B from Demodulator to ProtocolTask
-
-/* Debug ( Testpattern )
-uint8_t ucGlobalProtocolBuffer_A[ PROTOCOL_BUFFER_SIZE ] = {8,1,6,3,4,5,6,7,8,42,8,1,6,1,2,3,4,5,6,16,8,0,6,6,7,8,9,10,11,101,8,1};	// Buffer_A from Demodulator to ProtocolTask
-uint8_t ucGlobalProtocolBuffer_B[ PROTOCOL_BUFFER_SIZE ] = {6,3,4,5,6,7,8,66,8,1,6,3,4,5,6,7,8,66,8,1,6,3,4,5,6,7,8,66,2,1,0,66};	// Buffer_B from Demodulator to ProtocolTask
 */
+/* Debug ( Testpattern ) */
+uint8_t ucGlobalProtocolBuffer_A[ PROTOCOL_BUFFER_SIZE ] = {8,1,6,3,4,5,6,7,8,42,8,1,6,1,2,3,4,5,6,16,8,0,6,6,7,8,9,10,11,101,8,1};	// Buffer_A from Demodulator to ProtocolTask
+uint8_t ucGlobalProtocolBuffer_B[ PROTOCOL_BUFFER_SIZE ] = {6,3,4,5,6,7,8,42,8,1,6,3,4,5,6,7,8,42,12,1,10,3,4,5,6,7,8,9,10,11,12,81};	// Buffer_B from Demodulator to ProtocolTask
+
 
 void vProtocolHandlerTask( void *pvParameters ) {
 	( void ) pvParameters;
@@ -92,7 +92,8 @@ void vProtocolHandlerTask( void *pvParameters ) {
 */
 
 
-/* Searching active buffer for SLDPsize not 0 (zero) */		
+/* Searching active buffer for SLDPsize not 0 (zero) */	
+ 	
 		if( ucActiveBuffer == ACTIVEBUFFER_A ) {
 			if( xSemaphoreTake( xGlobalProtocolBuffer_A_Key, ( 50 / portTICK_RATE_MS ) ) ) {
 				if( ucGlobalProtocolBuffer_A[ ucBuffer_A_Position ] != 0) {
